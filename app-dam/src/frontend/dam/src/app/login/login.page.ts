@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonRow, IonCol, IonButton,
          IonButtons, IonLabel, IonList, IonItem, IonText, IonMenuButton
- } from '@ionic/angular/standalone';
+} from '@ionic/angular/standalone';
 import { LoginService } from '../services/login.service';
 
 @Component({
@@ -15,15 +15,27 @@ import { LoginService } from '../services/login.service';
     IonRow, IonCol, IonButton, IonButtons, IonLabel, IonList, IonItem, IonText, IonMenuButton]
 })
 export class LoginPage {
-  // login = { username: '', password: '' };
   submitted = false;
-  username = ''
-  password = ''
+  username = '';
+  password = '';
 
   constructor(private _loginService: LoginService) { }
 
-  onLogin() {
-    this.submitted = true
-    this._loginService.login(this.username, this.password)
+  async onLogin() {
+    if (!this.username || !this.password) {
+      alert('Por favor complete todos los campos');
+      return;
+    }
+
+    this.submitted = true;
+    
+    try {
+      await this._loginService.login(this.username, this.password);
+      // Si llega aquí, el login fue exitoso (el servicio ya navega a /home)
+    } catch (error) {
+      console.error('Error de login:', error);
+      alert('Usuario o contraseña incorrectos');
+      this.submitted = false;
+    }
   }
 }

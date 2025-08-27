@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Historial de Mediciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Si falla la carga -->
+  <div *ngIf="errorMessage">
+    <p style="color:red;">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Lista de mediciones -->
+  <ion-list *ngIf="mediciones.length > 0; else sinDatos">
+    <ion-item *ngFor="let m of mediciones">
+      <ion-label>
+        <h2 [appResaltarHumedad]="m.valor">{{ m.valor | humedad }}</h2>
+        <p>{{ m.fecha | date:'short' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- En caso de lista vacía -->
+  <ng-template #sinDatos>
+    <p>No existen mediciones para este dispositivo.</p>
+  </ng-template>
+
+</ion-content>

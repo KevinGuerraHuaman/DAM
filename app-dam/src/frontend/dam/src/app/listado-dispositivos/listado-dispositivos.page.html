@@ -1,16 +1,50 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>listado-dispositivos</ion-title>
+    <ion-title>Detalle Dispositivo</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">listado-dispositivos</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-<!-- <ion-button (click)="subscribe()">Subscribe</ion-button>
-<ion-button (click)="unsubscribe()">Unsubscribe</ion-button> -->
+  <!-- Si hay error -->
+  <div *ngIf="errorMessage">
+    <p style="color:red;">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Mostrar datos del dispositivo -->
+  <ion-card *ngIf="dispositivo; else cargando">
+    <ion-card-header>
+      <ion-card-title>{{ dispositivo.nombre }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Ubicación:</strong> {{ dispositivo.ubicacion }}</p>
+      <p>
+        <strong>Última medición:</strong> 
+        <span *ngIf="dispositivo.valor; else noMedicion">
+          {{ dispositivo.valor | humedad }} ({{ dispositivo.fecha | date:'short' }})
+        </span>
+      </p>
+    </ion-card-content>
+
+    <!-- Botones -->
+    <ion-button expand="block" color="primary" (click)="toggleValvula()">
+      Abrir / Cerrar Válvula
+    </ion-button>
+
+    <ion-button expand="block" color="secondary" (click)="verHistorial()">
+      Ver Historial de Mediciones
+    </ion-button>
+  </ion-card>
+
+  <!-- En caso de que aún esté cargando -->
+  <ng-template #cargando>
+    <p>Cargando dispositivo...</p>
+  </ng-template>
+
+  <!-- Si no tiene mediciones -->
+  <ng-template #noMedicion>
+    <span>No hay mediciones registradas</span>
+  </ng-template>
+
+</ion-content>

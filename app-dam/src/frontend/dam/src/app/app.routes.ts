@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'listado-dispositivos/:id',
     loadComponent: () => import('./listado-dispositivos/listado-dispositivos.page').then( m => m.ListadoDispositivosPage),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'mediciones/:id',
+    loadComponent: () => import('./mediciones/mediciones.page').then(m => m.MedicionesPage),
     canActivate: [authGuard]
   }
 ];

@@ -1,74 +1,72 @@
-import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton } from '@ionic/angular/standalone';
-import { interval, Observable, Subscription, fromEvent } from 'rxjs';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/angular/standalone';
 import { DispositivoService } from '../services/dispositivo.service';
-import { ActivatedRoute } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { HumedadPipe } from '../pipes/humedad.pipe';
 
 @Component({
   selector: 'app-listado-dispositivos',
   templateUrl: './listado-dispositivos.page.html',
   styleUrls: ['./listado-dispositivos.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+    CommonModule,HumedadPipe
+  ]
 })
-export class ListadoDispositivosPage implements OnInit, OnDestroy {
+export class ListadoDispositivosPage implements OnInit {
 
-  observable$: Observable<any> = interval(1000)
-  counter = toSignal(this.observable$, { initialValue: 0 })
-  // subscription: Subscription
-  dispositivos: any = []
+  dispositivo: any = null;
+  dispositivoId: string = '';
+  errorMessage: string = '';
 
-  mouseMove$ = fromEvent(document, 'mousemove')
+  constructor(
+    private dispositivoService: DispositivoService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  @Input()
-  id = '';
-
-  ionViewWillEnter () {
-    console.log(this._actRouter.snapshot.paramMap.get('id'))
+  ngOnInit() {
+    // Obtener el ID del dispositivo desde la URL
+    this.dispositivoId = this.activatedRoute.snapshot.paramMap.get('id') || '';
+    
+    if (this.dispositivoId) {
+      this.cargarDetalleDispositivo();
+    }
   }
 
-  constructor(public dispositivoService: DispositivoService,
-              private _actRouter: ActivatedRoute) {
-    effect(() => {
-      console.log(`El valor de counter es: ${this.counter()}`)
-    })
-    // this.subscription = this.observable$.subscribe((value) => {
-    //   console.log(value)
-    // })
-
-    // this.subscription = this.mouseMove$.subscribe((evt: any) => {
-    //   console.log(`Coords: ${evt.clientX} x ${evt.clientY} y`)
-    // })
+  cargarDetalleDispositivo() {
+    this.dispositivoService.getDispositivo(this.dispositivoId).subscribe({
+      next: (res) => {
+        this.dispositivo = res;
+        console.log('Dispositivo cargado:', this.dispositivo);
+      },
+      error: (err) => {
+        console.error('Error al obtener dispositivo', err);
+        this.errorMessage = 'No se pudo cargar el dispositivo.';
+      }
+    });
   }
 
-  // subscribe () {
-  //   this.subscription = this.mouseMove$.subscribe((evt: any) => {
-  //     console.log(`Coords: ${evt.clientX} x ${evt.clientY} y`)
-  //   })
-  // }
-
-  // unsubscribe () {
-  //   this.subscription.unsubscribe()
-  // }
-
-  async ngOnInit() {
-    await this.dispositivoService.getDispositivos()
-      .then((res) => {
-        this.dispositivos = res
-        console.log(this.dispositivos)
-        console.log("La promesa resolvió")
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    // Acá pongo código que debería ejecutarse con this.dispositivos conteniendo un arreglo de dispositivos
-    console.log("Ejecución fuera de la promesa")
+  toggleValvula() {
+    this.dispositivoService.toggleValvula(this.dispositivoId).subscribe({
+      next: (res) => {
+        console.log('Válvula accionada:', res);
+        alert(res.message); // Mostrar si se abrió o cerró
+        // Recargar datos para actualizar la última medición
+        this.cargarDetalleDispositivo();
+      },
+      error: (err) => {
+        console.error('Error al accionar válvula', err);
+        alert('Error al accionar la válvula');
+      }
+    });
   }
 
-  ngOnDestroy() {
-    // this.subscription.unsubscribe()
+  verHistorial() {
+    // Navegar a la página de mediciones del dispositivo
+    this.router.navigate(['/mediciones', this.dispositivoId]);
   }
 }

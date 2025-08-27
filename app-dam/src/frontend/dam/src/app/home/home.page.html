@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Listado de Dispositivos
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,15 +9,28 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Dispositivos</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <ion-list>
-      <ion-item>
-        <a routerLink="/listado-dispositivos/1" routerLinkActive="active" ariaCurrentWhenActive="page">Dispositivo 1 Cocina</a>
+
+    <!-- Lista de dispositivos -->
+    <ion-list *ngIf="dispositivos.length > 0; else sinDatos">
+      <ion-item *ngFor="let dispositivo of dispositivos">
+        <a class="ion-text-center"
+           [routerLink]="['/listado-dispositivos', dispositivo.dispositivoId]"
+           routerLinkActive="active"
+           ariaCurrentWhenActive="page">
+          {{ dispositivo.nombre }} - {{ dispositivo.ubicacion }}
+        </a>
       </ion-item>
     </ion-list>
+
+    <!-- Template alternativo si no hay dispositivos -->
+    <ng-template #sinDatos>
+      <p>No hay dispositivos registrados.</p>
+    </ng-template>
+
   </div>
 </ion-content>

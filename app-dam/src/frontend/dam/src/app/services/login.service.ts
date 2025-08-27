@@ -8,25 +8,35 @@ import { firstValueFrom } from 'rxjs';
 })
 export class LoginService {
 
-  uri = 'http://localhost:8000'
+  private apiUrl = 'http://localhost:8000'; 
 
   constructor(private _http: HttpClient, private _router: Router) { }
 
-  async login (username: string, password: string) {
-    let response = await firstValueFrom(this._http.post<any>(
-      this.uri + '/login', {username: username, password: password}
-    ))
-    if (response !== null) {
-      this._router.navigate(['/home'])
-      localStorage.setItem('token', response.token)
+  async login(username: string, password: string) {
+    try {
+      let response = await firstValueFrom(this._http.post<any>(
+        `${this.apiUrl}/login`,  // 👈 solo un /login
+        { username, password }
+      ));
+      
+      if (response && response.token) {
+        localStorage.setItem('token', response.token);
+        this._router.navigate(['/home']);
+      } else {
+        throw new Error('Token no recibido');
+      }
+    } catch (error) {
+      console.error('Error en login service:', error);
+      throw error;  // Re-lanza el error para que lo maneje el componente
     }
   }
 
-  logout () {
-    localStorage.removeItem('token')
+  logout() {
+    localStorage.removeItem('token');
+    this._router.navigate(['/login']);
   }
 
-  public get logIn (): boolean {
-    return (localStorage.getItem('token') !== null)
+  public get logIn(): boolean {
+    return (localStorage.getItem('token') !== null);
   }
 }
