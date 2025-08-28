@@ -54,8 +54,8 @@ export class ListadoDispositivosPage implements OnInit {
     this.dispositivoService.toggleValvula(this.dispositivoId).subscribe({
       next: (res) => {
         console.log('Válvula accionada:', res);
-        alert(res.message); // Mostrar si se abrió o cerró
-        // Recargar datos para actualizar la última medición
+        alert(res.message); // Mostrar
+        // Recargar datos 
         this.cargarDetalleDispositivo();
       },
       error: (err) => {
