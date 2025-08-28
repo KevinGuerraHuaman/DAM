@@ -1,53 +1,57 @@
-# Desarrollo de aplicaciones multiplataforma. Especialización IoT. FIUBA
+# Sistema de Monitoreo y Riego Inteligente
+## Trabajo Practico Final - Materia Desarrollo de Aplicaciones Multiplataforma (DAM) 
 
-## Clase 01
-    Single Page Application
-    Angular
-      Componentes
-      Bindings
+El proyecto implementa un sistema de monitoreo y control de dispositivos IoT para un hogar inteligente, enfocado en la gestión de riego. La aplicación consta de un frontend desarrollado con Ionic (Angular) y un backend con Node.js (Express) que interactúa con una base de datos MySQL.
 
-## Clase 02
-    Angular
-      Pipes
-      Servicios
-      Directivas
-        *ngIf
-        *ngFor
-        *ngSwitch
+## ✨ Características Principales
 
-## Clase 03
-    Comunicación entre componentes
-    Ciclo de vida Angular
-    App Híbridas vs Nativas
+- **Autenticación de Usuarios:** Sistema de login para acceder a la aplicación.
+- **Gestión de Dispositivos:** Visualización y detalle de sensores y electroválvulas.
+- **Simulación de Sensores:** Generación de datos de humedad al interactuar con las válvulas.
+- **Control de Riego:** Apertura y cierre de electroválvulas, registrando eventos y mediciones.
+- **Historial de Mediciones:** Visualización del historial de humedad por dispositivo.
+- **Arquitectura Backend:**  Unificado para todas las operaciones de la API.
+- **Contenedorización (Docker Compose):** Despliegue sencillo de todos los componentes (Frontend, Backend, MySQL, phpMyAdmin).
 
-## Clase 04
-    Ionic
-    Ciclo de vida ionic
-    Ionic Native
-    Web Api vs Web Service
-    Rest vs SOAP
-    Express - Middleware
+## 🚀 Tecnologías Utilizadas
 
-## Clase 05
-    CORS
-    MySql Pool
-    Services con HTTP
-    Observables
-    Promesas
-    Async-Await
+### Frontend
+- **Ionic Framework:** Para el desarrollo de la aplicación móvil/web.
+- **Angular:** Framework principal del frontend.
+- **TypeScript:** Lenguaje de programación.
+- **HTML/CSS (SCSS):** Estructura y estilos.
 
-## Clase 06
-    Interceptors
-    Guard
-    Router
+### Backend
+- **Node.js:** Entorno de ejecución del servidor.
+- **Express.js:** Framework para la API REST.
+- **JSON Web Tokens (JWT):** Para la autenticación y autorización.
+- **Bcrypt:** Para el hashing seguro de contraseñas.
+- **MySQL2:** Driver para la conexión con la base de datos MySQL.
 
-## Clase 07
-    Reactive Forms
+### Base de Datos
+- **MySQL:** Base de datos relacional para almacenar usuarios, dispositivos, mediciones y registros de riego.
+- **phpMyAdmin:** Interfaz web para la gestión de la base de datos.
 
-## Clase 08
-    Realización y entrega de TP final
+### Despliegue
+- **Docker:** Contenedorización de la aplicación.
+- **Docker Compose:** Orquestación de los servicios (frontend, backend, db, phpmyadmin).
 
-## Condición de aprobación
-    Entrega del trabajo final en la clase 8 (20/08/2025) o antes del (27/08/2025 23:59)
+## 🛠️ Configuración y Ejecución
 
-> **Nota:** Los ejercicios resueltos y los de la clase se encuentran sin la carpeta node_modules, por lo tanto si desean correr alguno de ellos se deberán parar en la carpeta y ejecutar el comando **npm install**
+### Requisitos
+- Docker Desktop instalado y en ejecución.
+
+## 📦 Despliegue
+
+1. Asegúrate de tener **Docker** y **Docker Compose** instalados.
+2. Clona el repositorio y entra al directorio raíz.
+3. Antes de levantar con Docker, para evitar errores de librerías, instala dependencias locales en **backend** y **frontend**:
+   ```bash
+   cd src/backend
+   npm install
+
+   cd ../frontend/dam
+   npm install
+3. Ejecuta el siguiente comando para construir e iniciar todos los servicios:
+   ```bash
+   docker-compose up --build
